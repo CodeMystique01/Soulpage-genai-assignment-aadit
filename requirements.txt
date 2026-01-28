@@ -1,11 +1,23 @@
 # Multi-Agent Company Intelligence System
+# Soulpage GenAI Assignment - Task 1 & Task 2
 
+# Core LangChain & LangGraph
 langgraph>=0.2.0
 langchain>=0.2.0
 langchain-openai>=0.1.0
 langchain-core>=0.2.0
+
+# UI Framework
 streamlit>=1.30.0
+
+# Environment & Configuration
 python-dotenv>=1.0.0
+pydantic>=2.0.0
+
+# Task 1: Company Intelligence Agent
 yfinance>=0.2.36
 pandas>=2.0.0
-pydantic>=2.0.0
+
+# Task 2: Knowledge Bot - Search Tools
+wikipedia>=1.4.0
+duckduckgo-search>=4.0.0

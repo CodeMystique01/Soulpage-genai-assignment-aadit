@@ -1,4 +1,17 @@
-# 🏢 Company Intelligence Agent
+# 🏢 Soulpage GenAI Assignment
+
+This repository contains two AI-powered applications demonstrating advanced LLM concepts:
+
+| Task | Project | Key Concepts |
+|------|---------|--------------|
+| **Task 1** | [Company Intelligence Agent](#task-1-company-intelligence-agent) | Multi-agent systems, LangGraph orchestration, Tool usage |
+| **Task 2** | [Conversational Knowledge Bot](#task-2-conversational-knowledge-bot) | Conversation memory, External data search, Contextual answers |
+
+> 📚 For detailed workflow and architecture explanations, see [WORKFLOW_GUIDE.md](WORKFLOW_GUIDE.md)
+
+---
+
+# Task 1: Company Intelligence Agent
 
 A Multi-Agent System built with **LangGraph** that generates comprehensive market summaries for companies by orchestrating specialized AI agents.
 
@@ -246,6 +259,106 @@ Stock Performance Summary:
 ...
 ```
 
+---
+
+# Task 2: Conversational Knowledge Bot
+
+A Conversational AI bot that remembers previous conversations, searches external data, and provides contextual answers.
+
+## 🎯 Overview
+
+| Feature | Description |
+|---------|-------------|
+| **Memory** | Remembers all previous messages using `ConversationBufferMemory` |
+| **Search** | Wikipedia and DuckDuckGo web search tools |
+| **Context** | Resolves pronouns ("he", "she", "they") using conversation history |
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    AgentExecutor                             │
+│              (with OpenAI Tools Agent)                       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+         ┌────────────────────┼────────────────────┐
+         ▼                    ▼                    ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  Wikipedia      │  │  DuckDuckGo     │  │  Knowledge      │
+│  Search Tool    │  │  Search Tool    │  │  Base (Static)  │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │ Conversation    │
+                    │ Buffer Memory   │
+                    └─────────────────┘
+```
+
+## 📁 Project Structure
+
+```
+knowledge_bot/
+├── bot.py              # Main bot with AgentExecutor
+├── tools.py            # Search tools (Wikipedia, DDG, KB)
+├── memory.py           # Conversation memory management
+└── streamlit_chat.py   # Chat UI
+```
+
+## 🚀 Usage
+
+### CLI Mode
+```bash
+python -m knowledge_bot.bot
+```
+
+### Streamlit Chat UI
+```bash
+streamlit run knowledge_bot/streamlit_chat.py
+```
+
+## 💬 Sample Chat Log
+
+```
+👤 You: Who is the CEO of OpenAI?
+🤖 Bot: The CEO of OpenAI is **Sam Altman**. He co-founded OpenAI 
+        in 2015 and has been leading the organization in developing 
+        safe artificial general intelligence.
+
+👤 You: Where did he study?
+🤖 Bot: Sam Altman studied at Stanford University, although he 
+        dropped out after two years to focus on his startup 
+        ventures, including Loopt which he co-founded.
+
+👤 You: What is machine learning?
+🤖 Bot: Machine learning is a subset of artificial intelligence 
+        that enables systems to learn and improve from experience 
+        without being explicitly programmed. It focuses on 
+        developing algorithms that can access data and use it 
+        to learn for themselves.
+```
+
+## 🔧 Memory Design
+
+The bot uses `ConversationBufferMemory` to:
+1. Store all conversation turns
+2. Track the current entity being discussed
+3. Resolve pronoun references ("he" → "Sam Altman")
+
+```python
+# Memory saves each conversation turn
+memory.save_context(
+    {"input": "Who is the CEO of OpenAI?"},
+    {"output": "Sam Altman is the CEO of OpenAI..."}
+)
+
+# Context extraction for follow-up questions
+context = memory.get_context_for_query("Where did he study?")
+# Returns: "Previous context: Sam Altman..."
+```
+
+---
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -264,6 +377,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [LangGraph](https://github.com/langchain-ai/langgraph) - Multi-agent orchestration
 - [Streamlit](https://streamlit.io/) - Web UI framework
 - [yfinance](https://github.com/ranaroussi/yfinance) - Stock data API
+- [Wikipedia-API](https://pypi.org/project/wikipedia/) - Wikipedia search
+- [DuckDuckGo Search](https://pypi.org/project/duckduckgo-search/) - Web search
 
 ---
 
